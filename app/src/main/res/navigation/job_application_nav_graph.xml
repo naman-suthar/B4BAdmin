@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/job_application_nav_graph.xml"
+    app:startDestination="@id/jobsListOptionFragment">
+
+    <fragment
+        android:id="@+id/jobListFragment"
+        android:name="com.ijp.b4badmin.jobs.job_application.JobListFragment"
+        android:label="fragment_job_list"
+        tools:layout="@layout/fragment_job_list" >
+        <argument
+            android:name="job_id"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_jobListFragment_to_jobApplicationDetailsFragment"
+            app:destination="@id/jobApplicationDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobApplicationDetailsFragment"
+        android:name="com.ijp.b4badmin.jobs.job_application.JobApplicationDetailsFragment"
+        android:label="fragment_job_application_details"
+        tools:layout="@layout/fragment_job_application_details" >
+        <argument
+            android:name="application"
+            app:argType="com.ijp.b4badmin.model.JobApplication"/>
+    </fragment>
+    <fragment
+        android:id="@+id/jobsListOptionFragment"
+        android:name="com.ijp.b4badmin.jobs.job_application.JobsListOptionFragment"
+        android:label="fragment_jobs_list_option"
+        tools:layout="@layout/fragment_jobs_list_option" >
+
+        <action
+            android:id="@+id/action_jobsListOptionFragment_to_jobListFragment"
+            app:destination="@id/jobListFragment" />
+    </fragment>
+</navigation>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".jobs.job_application.JobApplicationDetailsFragment">
+
+  <com.google.android.material.card.MaterialCardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/Widget.Material3.CardView.Filled">
+      
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="16dp"
+          android:orientation="vertical">
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Name Surname"
+              android:id="@+id/application_details_user_name"
+              android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+              android:textStyle="bold"
+              />
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="youremail@email.com"
+              android:id="@+id/application_details_user_email"
+              android:textSize="12sp"
+              />
+          <LinearLayout
+              android:layout_marginTop="8dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Mob: "
+                  />
+              <TextView
+                  android:id="@+id/application_details_user_mobile"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textStyle="bold"
+                  android:text="9876543210"
+                  android:layout_weight="1"
+                  android:layout_marginStart="8dp"
+                  />
+          </LinearLayout>
+          <LinearLayout
+              android:layout_marginTop="4dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="DoB: "
+                  />
+              <TextView
+                  android:id="@+id/application_details_user_dob"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textStyle="bold"
+                  android:text="20/04/2000"
+                  android:layout_weight="1"
+                  android:layout_marginStart="8dp"
+                  />
+          </LinearLayout>
+      </LinearLayout>
+  </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submitted Answers"
+        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"
+        android:id="@+id/rv_application_answers"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reject"
+            android:id="@+id/btn_application_reject"
+            app:backgroundTint="@color/md_theme_light_error"
+            android:paddingVertical="16dp"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Approve"
+            android:id="@+id/btn_application_approved"
+            app:backgroundTint="@color/green_approved"
+            android:paddingVertical="16dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
