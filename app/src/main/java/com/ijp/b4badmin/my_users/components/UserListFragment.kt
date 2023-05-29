@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.FirebaseDatabase
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.FragmentUserListBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.FragmentUserListBinding
 import com.ijp.b4badmin.model.User
 
 /**

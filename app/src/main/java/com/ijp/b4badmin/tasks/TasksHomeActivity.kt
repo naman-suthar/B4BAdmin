@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -16,11 +17,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.ActivityTasksHomeBinding
+import com.vrcareer.b4badmin.R
 import com.ijp.b4badmin.model.SubmittedTask
 import com.ijp.b4badmin.model.User
 import com.ijp.b4badmin.utils.convertLongToTime
+import com.vrcareer.b4badmin.databinding.ActivityTasksHomeBinding
 
 /**
  * This activity shows list of all pending task
@@ -35,6 +36,7 @@ class TasksHomeActivity : AppCompatActivity() {
         binding = ActivityTasksHomeBinding.inflate(layoutInflater)
         setContentView(binding?.root)
         adapter = SubmittedTaskRVAdapter(this,taskList){
+            Log.d("Task isthe","$it")
             val intent = Intent(this,ApproveTaskActivity::class.java)
             intent.putExtra("task",it)
             startActivity(intent)
@@ -58,13 +60,30 @@ class TasksHomeActivity : AppCompatActivity() {
                                     taskList.add(submittedTask)
                                 }
                             }
+
                         }
 
-
+                    }
+                    if (taskList.isEmpty()){
+                        binding?.txtNoTasksMessage?.visibility = View.VISIBLE
+                        Toast.makeText(
+                            this@TasksHomeActivity,
+                            "No Pending Tasks Available",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        binding?.txtNoTasksMessage?.visibility = View.GONE
                     }
                     Log.d("ValueSnap:","$taskList")
                     adapter?.updateList(taskList)
 
+                }
+                else{
+                    Toast.makeText(
+                        this@TasksHomeActivity,
+                        "No Pending Tasks Available YES",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -76,6 +95,8 @@ class TasksHomeActivity : AppCompatActivity() {
     }
 }
 
+/**
+ * Adapter for tasks list */
 class SubmittedTaskRVAdapter(context: Context, private var tasksList: MutableList<SubmittedTask>,val onTaskItemClicked: (SubmittedTask)->Unit)
     :RecyclerView.Adapter<SubmittedTaskRVAdapter.SubmittedTaskViewHolder>(){
     private val db = FirebaseDatabase.getInstance()
@@ -83,7 +104,6 @@ class SubmittedTaskRVAdapter(context: Context, private var tasksList: MutableLis
     fun updateList(list:MutableList<SubmittedTask>){
 
        tasksList = list
-        Log.d("ValueSnap","It is Called ${tasksList.size}")
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubmittedTaskViewHolder {

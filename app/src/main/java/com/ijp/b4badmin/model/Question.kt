@@ -5,7 +5,7 @@ data class Question (
     var question_statement: String? = null,
     var question_type: String? = null,
     var options: List<String>? = null
-        )
+        ) : java.io.Serializable
 
 
 sealed class QuestionType(val type: String){

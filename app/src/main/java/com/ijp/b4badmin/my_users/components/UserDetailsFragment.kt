@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.FragmentUserDetailsBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.FragmentUserDetailsBinding
 import com.ijp.b4badmin.model.PaymentDetails
 
 

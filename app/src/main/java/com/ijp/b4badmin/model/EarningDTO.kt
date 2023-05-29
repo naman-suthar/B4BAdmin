@@ -2,11 +2,11 @@ package com.ijp.b4badmin.model
 
 data class EarningDTO(
     var userid: String? = null,
-    var balance: Int? = null,
-    var total_earning: Int? = null,
-    var total_pending: Int? = null,
-    var total_withdrawal: Int? = null,
-    var pending_withdrawal:Int? = null,
+    var balance: Long? = null,
+    var total_earning: Long? = null,
+    var total_pending: Long? = null,
+    var total_withdrawal: Long? = null,
+    var pending_withdrawal:Long? = null,
     var withdrawalHistory: MutableList<WithdrawalRequest>? = null,
     )
 

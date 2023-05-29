@@ -1,5 +1,7 @@
 package com.ijp.b4badmin.jobs
 
+import android.app.ProgressDialog
+import android.net.Uri
 import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,19 +10,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.database.*
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.ActivityJobAddTaskBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.ijp.b4badmin.jobs.job_application.iterator
 import com.ijp.b4badmin.model.Job
 import com.ijp.b4badmin.model.Question
 import com.ijp.b4badmin.model.QuestionType
 import com.ijp.b4badmin.model.TaskItem
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.ActivityJobAddTaskBinding
 
 /**
  * This Activity is for adding task in job
@@ -29,12 +36,21 @@ class JobAddTaskActivity : AppCompatActivity() {
     private var binding: ActivityJobAddTaskBinding? = null
     private val db = FirebaseDatabase.getInstance()
     private val jobOptions = mutableListOf<String>()
+    private val jobIcons = mutableListOf<String?>()
+    private val storage = FirebaseStorage.getInstance()
+    private var storageReference = storage.reference
+    private var qrUri: Uri? = null
+    private val priceTypes = listOf(
+        "Fixed","Percentage",
+    )
+    private var selectedType = priceTypes[0]
+    private var taskLogo: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityJobAddTaskBinding.inflate(layoutInflater)
         setContentView(binding?.root)
         db.reference.child("Jobs").addValueEventListener(
-            object : ValueEventListener{
+            object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()){
                         jobOptions.clear()
@@ -42,6 +58,7 @@ class JobAddTaskActivity : AppCompatActivity() {
                             val job = job.getValue(Job::class.java)
                             if (job != null){
                                 jobOptions.add("${job.job_id}- ${job.job_title}")
+                                jobIcons.add(job.job_icon)
                             }
 
                         }
@@ -51,6 +68,7 @@ class JobAddTaskActivity : AppCompatActivity() {
                         )
                         (binding?.etSelectJob?.editText as? AutoCompleteTextView)?.setText(jobOptions[0])
                         (binding?.etSelectJob?.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+                        taskLogo = jobIcons[0]
 
                     }
                 }
@@ -72,6 +90,29 @@ class JobAddTaskActivity : AppCompatActivity() {
         )
         val questionTypeAdapter =
             ArrayAdapter(this, android.R.layout.simple_list_item_1, optionsTypes)
+
+        // Price type -> Fixed amount or in percentages
+
+        val priceTypesAdapter =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, priceTypes)
+
+
+        val priceTypesETLayout = binding?.etPriceType
+        val priceTypesType: EditText? = priceTypesETLayout?.editText
+        (priceTypesType as? AutoCompleteTextView)?.setText(selectedType)
+        (priceTypesType as? AutoCompleteTextView)?.setAdapter(priceTypesAdapter)
+        priceTypesType?.doOnTextChanged { inputText, _, _, _ ->
+            selectedType = inputText.toString()
+
+        }
+
+        (binding?.etSelectJob?.editText as? AutoCompleteTextView)?.doOnTextChanged { text, start, before, count ->
+            val indexOfJob = jobOptions.indexOf(text)
+            if (indexOfJob != -1){
+                taskLogo = jobIcons[indexOfJob]
+            }
+        }
+
         binding?.btnGenerateAssessmentForm?.setOnClickListener {
             val questionNo = binding?.etTotalQuestionAssessment?.text.toString().toIntOrNull()
 
@@ -157,6 +198,9 @@ class JobAddTaskActivity : AppCompatActivity() {
             val taskNote = binding?.etTaskNote?.text.toString()
             val trainingPageMessage = binding?.etTaskTrainingPageMessage?.text.toString()
             val trainingVideoId = binding?.etTaskTrainingVideoId?.text.toString()
+            val totalImagesInSubmission = binding?.etTotalImages?.text.toString()
+            val priceTagline = binding?.etPriceTagline?.text.toString()
+            val principalNoteInfo = binding?.etPmInfo?.text.toString()
             if (jobId.isEmpty()){
                 binding?.etSelectJob?.editText?.requestFocus()
                 binding?.etSelectJob?.editText?.error = "Empty"
@@ -174,6 +218,11 @@ class JobAddTaskActivity : AppCompatActivity() {
             if (taskTagline.isEmpty()){
                 binding?.etTaskTagline?.requestFocus()
                 binding?.etTaskTagline?.error = "Empty"
+                return@setOnClickListener
+            }
+            if (priceTagline.isEmpty()){
+                binding?.etPriceTagline?.requestFocus()
+                binding?.etPriceTagline?.error = "Empty"
                 return@setOnClickListener
             }
             if (taskPrice.isEmpty()){
@@ -204,6 +253,16 @@ class JobAddTaskActivity : AppCompatActivity() {
             if (trainingVideoId.isEmpty()){
                 binding?.etTaskTrainingVideoId?.requestFocus()
                 binding?.etTaskTrainingVideoId?.error = "Empty"
+                return@setOnClickListener
+            }
+            if (totalImagesInSubmission.isEmpty()){
+                binding?.etTotalImages?.requestFocus()
+                binding?.etTotalImages?.error = "Empty"
+                return@setOnClickListener
+            }
+            if (principalNoteInfo.isEmpty()){
+                binding?.etPmInfo?.requestFocus()
+                binding?.etPmInfo?.error = "Empty"
                 return@setOnClickListener
             }
             val questionAssessmentList = mutableListOf<Question>()
@@ -271,45 +330,138 @@ class JobAddTaskActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val task = TaskItem(
-                jobId = jobId,
-                taskId = taskId,
-                task_title = taskTitle,
-                task_earning_price = taskPrice.toInt(),
-                task_tagline = taskTagline,
-                task_guidelines = taskGuidelines,
-                task_steps_to_follow = taskStepsToFollow,
-                task_note = taskNote,
-                screeningQuestions = questionSubmissionList,
-                assessmentQuestions = questionAssessmentList,
-                training_note = trainingPageMessage,
-                training_video_ID = trainingVideoId
-            )
-            db.reference.child("tasks").child(jobId).child(taskId).setValue(task).addOnSuccessListener {
-                Toast.makeText(this, "Task Added Successfully", Toast.LENGTH_SHORT).show()
-                val finish = false
-                /*db.reference.child("Jobs").child(jobId).runTransaction(
-                    object : Transaction.Handler{
-                        override fun doTransaction(currentData: MutableData): Transaction.Result {
-                            currentData?.value?.let {
-                                val job = currentData?.getValue(Job::class.java)
-                                val activeTasks: MutableList<TaskItem> = job?.associatedTasks ?: mutableListOf()
-                                activeTasks.
-                            }
-                        }
+            val progressBar = ProgressDialog(this)
+            progressBar.setTitle("Uploading ")
+            progressBar.setCancelable(false)
+            progressBar.show()
 
-                        override fun onComplete(
-                            error: DatabaseError?,
-                            committed: Boolean,
-                            currentData: DataSnapshot?
-                        ) {
-                            TODO("Not yet implemented")
+            qrUri?.let { uri ->
+
+                val timeOfNow = System.currentTimeMillis()
+
+                storageReference.child("Images/QR").child(taskId).child("qr")
+                    .putFile(uri).addOnSuccessListener { task ->
+                        task.metadata!!.reference!!.downloadUrl.addOnSuccessListener { urifs ->
+
+                            //Submit Form
+                            val task = TaskItem(
+                                jobId = jobId,
+                                jobLogo = taskLogo,
+                                taskId = taskId,
+                                task_title = taskTitle,
+                                task_earning_price = taskPrice.toFloat(),
+                                task_tagline = taskTagline,
+                                price_tagline = priceTagline,
+                                task_guidelines = taskGuidelines,
+                                task_steps_to_follow = taskStepsToFollow,
+                                task_note = taskNote,
+                                screeningQuestions = questionSubmissionList,
+                                assessmentQuestions = questionAssessmentList,
+                                training_note = trainingPageMessage,
+                                training_video_ID = trainingVideoId,
+                                task_qr_url = urifs.toString(),
+                                price_type = selectedType,
+                                no_of_images_proof = totalImagesInSubmission.toInt(),
+                                principal_info_note = principalNoteInfo
+                            )
+                            db.reference.child("tasks").child(jobId).child(taskId).setValue(task).addOnSuccessListener {
+                                Toast.makeText(this, "Task Added Successfully", Toast.LENGTH_SHORT).show()
+                                val finish = false
+                                progressBar.dismiss()
+                                finish()
+                            }
+
+
+
                         }
+                            .addOnFailureListener { e ->
+                                progressBar.dismiss()
+                                Toast.makeText(
+                                    this,
+                                    "Retry",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                            }
                     }
-                )*/
-                finish()
+                    .addOnFailureListener { e ->
+                        progressBar.dismiss()
+                        Toast.makeText(
+                            this,
+                            "Storage Network error ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            } ?: run {
+                val task = TaskItem(
+                    jobId = jobId,
+                    jobLogo = taskLogo,
+                    taskId = taskId,
+                    task_title = taskTitle,
+                    task_earning_price = taskPrice.toFloat(),
+                    task_tagline = taskTagline,
+                    price_tagline = priceTagline,
+                    task_guidelines = taskGuidelines,
+                    task_steps_to_follow = taskStepsToFollow,
+                    task_note = taskNote,
+                    screeningQuestions = questionSubmissionList,
+                    assessmentQuestions = questionAssessmentList,
+                    training_note = trainingPageMessage,
+                    training_video_ID = trainingVideoId,
+                    task_qr_url = null,
+                    price_type = selectedType,
+                    no_of_images_proof = totalImagesInSubmission.toInt(),
+                    principal_info_note = principalNoteInfo
+                )
+                db.reference.child("tasks").child(jobId).child(taskId).setValue(task)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Task Added Successfully", Toast.LENGTH_SHORT).show()
+                        val finish = false
+
+                        finish()
+                    }
             }
-            Log.d("Success","$task")
+
+        }
+
+        val galleryImage = registerForActivityResult(
+            ActivityResultContracts.GetContent()
+        ) {
+
+            binding?.qrPreview?.setImageURI(it)
+//                imgUri = it
+            qrUri = it
+
+
+        }
+        binding?.btnSelectQr?.setOnClickListener {
+            galleryImage.launch("image/*")
+
         }
     }
+
+    private fun submitTask(task: TaskItem) {
+
+
+    }
 }
+
+/*db.reference.child("Jobs").child(jobId).runTransaction(
+                                    object : Transaction.Handler{
+                                        override fun doTransaction(currentData: MutableData): Transaction.Result {
+                                            currentData?.value?.let {
+                                                val job = currentData?.getValue(Job::class.java)
+                                                val activeTasks: MutableList<TaskItem> = job?.associatedTasks ?: mutableListOf()
+                                                activeTasks.
+                                            }
+                                        }
+
+                                        override fun onComplete(
+                                            error: DatabaseError?,
+                                            committed: Boolean,
+                                            currentData: DataSnapshot?
+                                        ) {
+                                            TODO("Not yet implemented")
+                                        }
+                                    }
+                                )*/

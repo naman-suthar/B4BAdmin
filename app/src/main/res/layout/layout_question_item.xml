@@ -18,7 +18,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:tag="et_question_statement"
-                android:id="@+id/et_total_question_no"
+                android:id="@+id/et__question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"

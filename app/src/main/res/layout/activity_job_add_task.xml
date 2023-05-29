@@ -196,9 +196,101 @@ tools:context=".jobs.JobAddTaskActivity" >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Task Price (\u20b9)"
+                        android:text="Price Tagline"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_price_tagline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:gravity="top|start"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QR code(optional)"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/qr_preview"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/ic_baseline_image_24"
+                            />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_select_qr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_baseline_add_24"
+                            android:text="Select"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="18dp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Task Price (\u20b9)"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/et_price_type"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/dropdown_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:hint="Type"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
@@ -209,7 +301,7 @@ tools:context=".jobs.JobAddTaskActivity" >
                             android:id="@+id/et_task_price"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
                             android:gravity="top|start"
                             />
 
@@ -493,6 +585,81 @@ tools:context=".jobs.JobAddTaskActivity" >
                 android:orientation="vertical"
                 android:layout_marginTop="20dp"
                 android:id="@+id/ll_submission_form_container"/>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total images in Submission"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_total_images"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:minLines="1"
+                            android:maxLength="1"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Principal Amount Info Note"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_pm_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:gravity="top|start"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

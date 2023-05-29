@@ -1,12 +1,13 @@
 package com.ijp.b4badmin.withdraw_request
 
+import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.google.firebase.database.*
-import com.ijp.b4badmin.databinding.ActivityWithdrawDetailsBinding
 import com.ijp.b4badmin.model.EarningDTO
 import com.ijp.b4badmin.model.WithdrawalRequest
+import com.vrcareer.b4badmin.databinding.ActivityWithdrawDetailsBinding
 import java.text.SimpleDateFormat
 import java.util.*
 /**
@@ -26,6 +27,10 @@ class WithdrawDetailsActivity : AppCompatActivity() {
             binding?.txtWithdrawRequestTime?.text = convertLongToTime( withdrawalRequest.time_of_request!!)
 
             binding?.btnRequestApproved?.setOnClickListener {
+                val progressDialog = ProgressDialog(this)
+                progressDialog.setCancelable(false)
+                progressDialog.show()
+
                 var finish = false
                 /**
                  * Fetch Earning and update the earning after Approval*/
@@ -55,7 +60,11 @@ class WithdrawDetailsActivity : AppCompatActivity() {
                             currentData: DataSnapshot?
                         ) {
                             if (finish){
-                                db.reference.child("withdraw_request").child(withdrawalRequest.user_id!!).removeValue()
+
+                                db.reference.child("withdraw_request").child(withdrawalRequest.user_id!!).removeValue().addOnSuccessListener {
+                                    progressDialog.dismiss()
+                                    finish()
+                                }
                             }
                         }
                     }

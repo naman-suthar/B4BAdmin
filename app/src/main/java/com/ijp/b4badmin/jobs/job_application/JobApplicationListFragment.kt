@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.FirebaseDatabase
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.FragmentJobListBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.FragmentJobListBinding
 import com.ijp.b4badmin.model.JobApplication
 import com.ijp.b4badmin.model.User
 import com.ijp.b4badmin.utils.convertLongToTime

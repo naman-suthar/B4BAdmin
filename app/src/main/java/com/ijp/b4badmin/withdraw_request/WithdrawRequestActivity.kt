@@ -11,10 +11,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.ActivityWithdrawRequestBinding
+import com.google.firebase.database.ValueEventListener
+import com.vrcareer.b4badmin.R
 import com.ijp.b4badmin.model.WithdrawalRequest
+import com.vrcareer.b4badmin.databinding.ActivityWithdrawRequestBinding
 
 /**
  * This activity is used to show the list of Withdrawal requests
@@ -32,7 +35,40 @@ class WithdrawRequestActivity : AppCompatActivity() {
          * Fetching all withdrawal request from database
          * and update List
          * */
-        db.reference.child("withdraw_request").get().addOnSuccessListener {
+        db.reference.child("withdraw_request").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        withdrawRequestList.clear()
+                        for (snap in snapshot.children){
+                            val request = snap.getValue(WithdrawalRequest::class.java)
+                            if (request != null) {
+                                withdrawRequestList.add(request)
+                            }
+                        }
+                        adapter = WithdrawRequestRv(this@WithdrawRequestActivity,withdrawRequestList){req->
+                            val intent = Intent(this@WithdrawRequestActivity,WithdrawDetailsActivity::class.java)
+                            intent.putExtra("request",req)
+                            startActivity(intent)
+                        }
+                        binding?.rvWithdrawalRequests?.let {rv->
+                            rv.layoutManager = LinearLayoutManager(this@WithdrawRequestActivity)
+                            rv.adapter = adapter
+                        }
+                        if (withdrawRequestList.isEmpty()){
+                            binding?.txtNoAssessmentMessage?.visibility = View.VISIBLE
+                        }else{
+                            binding?.txtNoAssessmentMessage?.visibility = View.GONE
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            }
+        )
+        /*db.reference.child("withdraw_request").get().addOnSuccessListener {
             if (it.exists()){
                 withdrawRequestList.clear()
                 for (snap in it.children){
@@ -50,8 +86,13 @@ class WithdrawRequestActivity : AppCompatActivity() {
                     rv.layoutManager = LinearLayoutManager(this)
                     rv.adapter = adapter
                 }
+                if (withdrawRequestList.isEmpty()){
+                    binding?.txtNoAssessmentMessage?.visibility = View.VISIBLE
+                }else{
+                    binding?.txtNoAssessmentMessage?.visibility = View.GONE
+                }
             }
-        }
+        }*/
     }
 }
 

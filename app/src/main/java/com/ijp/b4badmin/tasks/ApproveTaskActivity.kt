@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
@@ -12,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.ActivityApproveTaskBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.ActivityApproveTaskBinding
 import com.ijp.b4badmin.jobs.job_application.RvApplicationAnswersAdapter
 import com.ijp.b4badmin.model.EarningDTO
 import com.ijp.b4badmin.model.SubmittedTask
@@ -28,18 +30,21 @@ class ApproveTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityApproveTaskBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        Log.d("ReceivedTask ","${intent.getSerializableExtra("task")}")
         val task = intent.getSerializableExtra("task") as SubmittedTask?
-        val imageHolderList = listOf(
-            binding?.imgTaskProof1,
-            binding?.imgTaskProof2,
-            binding?.imgTaskProof3,
-            binding?.imgTaskProof4
-        )
 
-        for (i in 0 until task?.imageList!!.size) {
-            imageHolderList[i]?.load(task.imageList?.get(i)?.toUri())
+        for (i in 0 until (task?.imageList?.size ?: 0)) {
+            val imageView = ImageView(this)
+            imageView.load(task?.imageList?.get(i)?.toUri())
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(0,6,0,6)
+            binding?.llImageHolder?.addView(imageView,layoutParams)
         }
-        val adapter = RvApplicationAnswersAdapter(this,task.answerList!!)
+
+        val adapter = RvApplicationAnswersAdapter(this,task?.answerList!!)
         binding?.rvSubmittedTaskAnswersRv?.let {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = adapter
@@ -61,10 +66,11 @@ class ApproveTaskActivity : AppCompatActivity() {
             positiveButton?.setOnClickListener {
                 val rejectMessage = etMessage.text.toString().trim()
                 if (rejectMessage.isNotEmpty()) {
-                    val userId = task.uid
-                    val taskId = task.taskId
+                    val userId = task?.uid
+                    val taskId = task?.taskId
                     if (userId != null) {
-                        db.reference.child("submitted_task").child(userId).child(task.uniqueId!!)
+                        var finish = false
+                        db.reference.child("submitted_task").child(userId).child(task?.uniqueId!!)
                             .runTransaction(
                                 object : Transaction.Handler{
                                     override fun doTransaction(currentData: MutableData): Transaction.Result {
@@ -76,6 +82,7 @@ class ApproveTaskActivity : AppCompatActivity() {
                                                     message = rejectMessage
                                                 )
                                                 currentData.value = newData
+                                                finish = true
                                             }
 
 
@@ -91,6 +98,10 @@ class ApproveTaskActivity : AppCompatActivity() {
                                         if (error != null) {
                                             Log.d("Firebase", "Transaction failed")
                                         } else {
+                                            if (finish){
+                                                alertDialog?.dismiss()
+                                                finish()
+                                            }
                                             Toast.makeText(this@ApproveTaskActivity,"Rejected",Toast.LENGTH_SHORT).show()
                                         }
                                     }
@@ -120,6 +131,7 @@ class ApproveTaskActivity : AppCompatActivity() {
                     .get()
                     .addOnSuccessListener {
                         if (it.exists()){
+                            var finish = false
                             val status = it.value
                             if (status!="approved"){
                                 db.reference.child("submitted_task").child(userId).child(task.uniqueId!!)
@@ -140,6 +152,7 @@ class ApproveTaskActivity : AppCompatActivity() {
                                                     )
                                                     Log.d("mutableData:","$mutableData \n CE $currentEarning \n NE: $newEarning")
                                                     mutableData?.value = newEarning
+                                                    finish = true
                                                 }
                                                 return Transaction.success(mutableData)
 
@@ -152,12 +165,16 @@ class ApproveTaskActivity : AppCompatActivity() {
                                             ) {
                                                 if (databaseError != null) {
                                                     Log.d("Firebase", "Transaction failed")
-                                                } else {
+                                                } else if (finish) {
                                                     Toast.makeText(this@ApproveTaskActivity,"Approved Earning",Toast.LENGTH_SHORT).show()
+                                                    this@ApproveTaskActivity.finish()
                                                 }
                                             }
                                         })
                                     }
+                            }
+                            else{
+                                finish()
                             }
                         }
                     }

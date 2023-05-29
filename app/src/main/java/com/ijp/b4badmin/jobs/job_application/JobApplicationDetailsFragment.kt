@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.ijp.b4badmin.MainActivity
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.FragmentJobApplicationDetailsBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.FragmentJobApplicationDetailsBinding
 import com.ijp.b4badmin.model.Answer
 import com.ijp.b4badmin.model.User
 import com.ijp.b4badmin.utils.convertLongToTime

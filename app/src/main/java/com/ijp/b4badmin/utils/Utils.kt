@@ -8,3 +8,8 @@ fun convertLongToTime(time: Long): String {
     val format = SimpleDateFormat("yyyy/MM/dd HH:mm")
     return format.format(date)
 }
+
+sealed class TaskEarningType(val type: String){
+    object Fixed : TaskEarningType("Fixed")
+    object Percentage : TaskEarningType("Percentage")
+}

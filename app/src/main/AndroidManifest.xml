@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name="com.ijp.b4badmin.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,84 +14,90 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".jobs.job_application.AddNewJobActivity"
+            android:name="com.ijp.b4badmin.jobs.configure.EditJobActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ijp.b4badmin.jobs.configure.ConfigureAppActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ijp.b4badmin.jobs.job_application.AddNewJobActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".withdraw_request.WithdrawDetailsActivity"
+            android:name="com.ijp.b4badmin.withdraw_request.WithdrawDetailsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".withdraw_request.WithdrawRequestActivity"
+            android:name="com.ijp.b4badmin.withdraw_request.WithdrawRequestActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".trainings.ApproveAssessmentActivity"
+            android:name="com.ijp.b4badmin.trainings.ApproveAssessmentActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".trainings.TrainingSubmissionListActivity"
+            android:name="com.ijp.b4badmin.trainings.TrainingSubmissionListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".tasks.ApproveTaskActivity"
+            android:name="com.ijp.b4badmin.tasks.ApproveTaskActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".tasks.TasksHomeActivity"
+            android:name="com.ijp.b4badmin.tasks.TasksHomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".my_users.MyUsersActivity"
+            android:name="com.ijp.b4badmin.my_users.MyUsersActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".jobs.JobAddTaskActivity"
+            android:name="com.ijp.b4badmin.jobs.JobAddTaskActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".jobs.JobApplicationActivity"
+            android:name="com.ijp.b4badmin.jobs.JobApplicationActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".jobs.JobHomeActivity"
+            android:name="com.ijp.b4badmin.jobs.JobHomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.ijp.b4badmin.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

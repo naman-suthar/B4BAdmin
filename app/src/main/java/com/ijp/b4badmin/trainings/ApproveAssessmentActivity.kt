@@ -8,7 +8,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.ijp.b4badmin.databinding.ActivityApproveAssessmentBinding
+import com.vrcareer.b4badmin.databinding.ActivityApproveAssessmentBinding
 import com.ijp.b4badmin.jobs.job_application.RvApplicationAnswersAdapter
 import com.ijp.b4badmin.model.Assessment
 import com.ijp.b4badmin.model.User

@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.FirebaseDatabase
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.FragmentJobsListOptionBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.FragmentJobsListOptionBinding
 import com.ijp.b4badmin.model.Job
 
 /**
@@ -49,6 +49,14 @@ class JobsListOptionFragment : Fragment() {
                         } }
                     }
                 }
+            }
+            else{
+                binding?.progress?.visibility = View.GONE
+                Toast.makeText(
+                    context,
+                    "No Job Applications available",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         return binding?.root

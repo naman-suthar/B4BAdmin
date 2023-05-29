@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -16,8 +17,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.ActivityTrainingSubmittionListBinding
+import com.vrcareer.b4badmin.R
+import com.vrcareer.b4badmin.databinding.ActivityTrainingSubmittionListBinding
 import com.ijp.b4badmin.model.Assessment
 import com.ijp.b4badmin.model.User
 import com.ijp.b4badmin.tasks.ApproveTaskActivity
@@ -49,12 +50,13 @@ class TrainingSubmissionListActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()){
                     assessmentList.clear()
+
                     for (snap in snapshot.children){
                         val userId = snap.key
                         if (snap.exists()){
                             for (task in snap.children){
                                 val assess = task.getValue(Assessment::class.java)
-                                if (assess != null) {
+                                if (assess != null && assess.status != "approved") {
                                     assessmentList.add(assess)
                                 }
                             }
@@ -64,7 +66,20 @@ class TrainingSubmissionListActivity : AppCompatActivity() {
                     }
                     Log.d("ValueSnap:","$assessmentList")
                     adapter?.updateList(assessmentList)
+                    if (assessmentList.isEmpty()){
+                        binding?.txtNoAssessmentMessage?.visibility = View.VISIBLE
+                    }else{
+                        binding?.txtNoAssessmentMessage?.visibility = View.GONE
+                    }
 
+                }else{
+                    binding?.txtNoAssessmentMessage?.visibility = View.VISIBLE
+                    Toast.makeText(
+                        this@TrainingSubmissionListActivity,
+                        "Network error",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
             }
 

@@ -2,7 +2,8 @@ package com.ijp.b4badmin.jobs
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.ijp.b4badmin.R
+import com.vrcareer.b4badmin.R
+
 
 /**
  * This is Jobs Application Activity and It hosts the Application List and Detail navigation*/

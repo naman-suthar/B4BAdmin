@@ -19,11 +19,12 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.ijp.b4badmin.R
-import com.ijp.b4badmin.databinding.ActivityAddNewJobBinding
+import com.vrcareer.b4badmin.R
+
 import com.ijp.b4badmin.model.Job
 import com.ijp.b4badmin.model.Question
 import com.ijp.b4badmin.model.QuestionType
+import com.vrcareer.b4badmin.databinding.ActivityAddNewJobBinding
 
 /**
  * This activity is for adding a new Job
@@ -49,16 +50,15 @@ class AddNewJobActivity : AppCompatActivity() {
         val questionTypeAdapter =
             ArrayAdapter(this, android.R.layout.simple_list_item_1, optionsTypes)
         val galleryImage = registerForActivityResult(
-            ActivityResultContracts.GetContent(),
-            ActivityResultCallback {
+            ActivityResultContracts.GetContent()
+        ) {
 
-                binding?.jobLogoPreview?.setImageURI(it)
+            binding?.jobLogoPreview?.setImageURI(it)
 //                imgUri = it
-                jobIconUri = it
+            jobIconUri = it
 
 
-            }
-        )
+        }
         binding?.btnSelectIcon?.setOnClickListener {
                 galleryImage.launch("image/*")
 
@@ -184,7 +184,8 @@ class AddNewJobActivity : AppCompatActivity() {
                                 job_tagline = job_tagline,
                                 job_description = job_description,
                                 screeningQuestions = questionList,
-                                job_icon = urifs.toString()
+                                job_icon = urifs.toString(),
+                                status = "Active"
                             )
 
                             db.reference.child("Jobs").child(job_id).setValue(job).addOnSuccessListener {

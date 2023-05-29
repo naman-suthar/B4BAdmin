@@ -44,34 +44,16 @@
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textStyle="bold"/>
 
-            <ImageView
-                android:layout_marginVertical="16dp"
-                android:id="@+id/img_task_proof_1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@drawable/airtel" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:id="@+id/ll_image_holder"
+                >
 
-            <ImageView
-                android:layout_marginVertical="16dp"
-                android:id="@+id/img_task_proof_2"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@drawable/airtel" />
+            </LinearLayout>
 
-
-            <ImageView
-                android:layout_marginVertical="16dp"
-                android:id="@+id/img_task_proof_3"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@drawable/airtel" />
-
-            <ImageView
-                android:layout_marginVertical="16dp"
-                android:id="@+id/img_task_proof_4"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@drawable/airtel" />
 
             <LinearLayout
                 android:layout_width="match_parent"

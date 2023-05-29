@@ -1,5 +1,8 @@
 package com.ijp.b4badmin.model
 
+import android.os.Parcelable
+
+
 data class Job(
     var job_id: String? = null,
     var job_title: String? = null,
@@ -13,8 +16,9 @@ data class Job(
     var screeningQuestions: List<Question>? = null,
     var applied: Boolean? = null,
     var requirements: Map<String,String>? = null,
-    var job_icon: String? = null
-)
+    var job_icon: String? = null,
+    var status: String? = null
+): java.io.Serializable
 
 fun getAirtelJob(): Job {
     return Job(
