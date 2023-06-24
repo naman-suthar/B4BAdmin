@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.FirebaseDatabase
 import com.vrcareer.b4badmin.R
@@ -80,6 +82,7 @@ class RvJobOptionAdapter(val context: Context, val jobIdList: List<String>, val 
                 val jobItem = it.getValue(Job::class.java)
                 holder.frameLayout.visibility = View.GONE
                 holder.jobTitle.text = jobItem?.job_title
+                holder.jobLogo.load(jobItem?.job_icon)
                 holder.mcJopOption.setOnClickListener {
                     onJobItemClicked(currJobId)
                 }
@@ -96,6 +99,7 @@ class RvJobOptionAdapter(val context: Context, val jobIdList: List<String>, val 
         val jobTitle: TextView = view.findViewById(R.id.tv_job_option_title)
         val frameLayout: FrameLayout = view.findViewById(R.id.frame_item_loading)
         val mcJopOption: MaterialCardView = view.findViewById(R.id.mc_job_item_option)
+        val jobLogo: ImageView = view.findViewById(R.id.img_logo_job_option)
         }
 
 

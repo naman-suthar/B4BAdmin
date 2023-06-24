@@ -59,6 +59,7 @@ class JobAddTaskActivity : AppCompatActivity() {
                             if (job != null){
                                 jobOptions.add("${job.job_id}- ${job.job_title}")
                                 jobIcons.add(job.job_icon)
+
                             }
 
                         }
@@ -107,9 +108,11 @@ class JobAddTaskActivity : AppCompatActivity() {
         }
 
         (binding?.etSelectJob?.editText as? AutoCompleteTextView)?.doOnTextChanged { text, start, before, count ->
-            val indexOfJob = jobOptions.indexOf(text)
+            val indexOfJob = jobOptions.indexOf("$text")
+            Log.d("JObIsAMAre","$text")
             if (indexOfJob != -1){
                 taskLogo = jobIcons[indexOfJob]
+                Log.d("JObIsAMAre","$taskLogo")
             }
         }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,31 +36,38 @@ class WithdrawRequestActivity : AppCompatActivity() {
          * Fetching all withdrawal request from database
          * and update List
          * */
+        adapter = WithdrawRequestRv(this@WithdrawRequestActivity, withdrawRequestList) { req ->
+            val intent = Intent(this@WithdrawRequestActivity, WithdrawDetailsActivity::class.java)
+            intent.putExtra("request", req)
+            startActivity(intent)
+        }
+        binding?.rvWithdrawalRequests?.let { rv ->
+            rv.layoutManager = LinearLayoutManager(this@WithdrawRequestActivity)
+            rv.adapter = adapter
+        }
         db.reference.child("withdraw_request").addValueEventListener(
-            object : ValueEventListener{
+            object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        withdrawRequestList.clear()
-                        for (snap in snapshot.children){
+                    withdrawRequestList.clear()
+                    if (snapshot.exists()) {
+                        for (snap in snapshot.children) {
                             val request = snap.getValue(WithdrawalRequest::class.java)
                             if (request != null) {
+                                Log.d("InitializedBVH", "listReq -> $request")
                                 withdrawRequestList.add(request)
                             }
                         }
-                        adapter = WithdrawRequestRv(this@WithdrawRequestActivity,withdrawRequestList){req->
-                            val intent = Intent(this@WithdrawRequestActivity,WithdrawDetailsActivity::class.java)
-                            intent.putExtra("request",req)
-                            startActivity(intent)
-                        }
-                        binding?.rvWithdrawalRequests?.let {rv->
-                            rv.layoutManager = LinearLayoutManager(this@WithdrawRequestActivity)
-                            rv.adapter = adapter
-                        }
-                        if (withdrawRequestList.isEmpty()){
+                        adapter?.updateList(withdrawRequestList)
+                        if (withdrawRequestList.isEmpty()) {
                             binding?.txtNoAssessmentMessage?.visibility = View.VISIBLE
-                        }else{
+                        } else {
                             binding?.txtNoAssessmentMessage?.visibility = View.GONE
                         }
+                    } else {
+                        adapter?.updateList(withdrawRequestList)
+                        binding?.rvWithdrawalRequests?.visibility = View.GONE
+                        binding?.txtNoAssessmentMessage?.visibility = View.VISIBLE
+
                     }
                 }
 
@@ -96,20 +104,26 @@ class WithdrawRequestActivity : AppCompatActivity() {
     }
 }
 
-class WithdrawRequestRv(context:Context, private val requestList: MutableList<WithdrawalRequest>, val onRequestClicked: (WithdrawalRequest)->Unit)
-    :RecyclerView.Adapter<WithdrawRequestRv.WithdrawViewHolder>(){
+class WithdrawRequestRv(
+    context: Context,
+    private var requestList: List<WithdrawalRequest>,
+    val onRequestClicked: (WithdrawalRequest) -> Unit
+) : RecyclerView.Adapter<WithdrawRequestRv.WithdrawViewHolder>() {
 
-    fun updateList(list: List<WithdrawalRequest>){
-        requestList.clear()
-        requestList.addAll(list)
+    fun updateList(list: List<WithdrawalRequest>) {
+        Log.d("InitializedBVH", "Inp ->$list")
+        requestList = list as MutableList<WithdrawalRequest>
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WithdrawViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.single_task_submitted_list_item,parent,false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.single_task_submitted_list_item, parent, false)
         return WithdrawViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: WithdrawViewHolder, position: Int) {
+        Log.d("InitializedBVH", "true")
         val currRequest = requestList[position]
         holder.withdraweeName.text = currRequest.userName
         holder.mcItem.setOnClickListener {
@@ -119,9 +133,9 @@ class WithdrawRequestRv(context:Context, private val requestList: MutableList<Wi
 
     override fun getItemCount(): Int = requestList.size
 
-    class WithdrawViewHolder(view: View): RecyclerView.ViewHolder(view){
-            val withdraweeName: TextView = view.findViewById(R.id.tv_submitted_task)
-            val mcItem: MaterialCardView = view.findViewById(R.id.mc_taskItem)
-        }
+    class WithdrawViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val withdraweeName: TextView = view.findViewById(R.id.tv_submitted_task)
+        val mcItem: MaterialCardView = view.findViewById(R.id.mc_taskItem)
+    }
 
 }

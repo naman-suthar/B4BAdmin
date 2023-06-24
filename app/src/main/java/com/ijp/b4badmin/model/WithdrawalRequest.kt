@@ -7,5 +7,8 @@ data class WithdrawalRequest(
     var time_of_request: Long? = null,
     var time_of_approval: Long? = null,
     var status: String? = null,
-    var userName: String? = null
+    var userName: String? = null,
+    var transaction_id: String? = null,
+    var employee_id: String? = null,
+    var rejection_message: String? = null
 ):java.io.Serializable

@@ -14,9 +14,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.*
-import com.ijp.b4badmin.jobs.job_application.RvJobOptionAdapter
 import com.ijp.b4badmin.model.Job
 import com.vrcareer.b4badmin.R
 import com.vrcareer.b4badmin.databinding.ActivityConfigureAppBinding
@@ -79,7 +79,7 @@ class ConfigureAppActivity : AppCompatActivity() {
     }
 }
 
-class RvJobConfigureAdapter(val context: Context, val jobIdList: List<String>, val onJobItemClicked: (String)-> Unit)
+class RvJobConfigureAdapter(val context: Context, val jobIdList: List<String>, val onJobDeleteIconClicked: (String)-> Unit)
     : RecyclerView.Adapter<RvJobConfigureAdapter.RvJobListItem>(){
     private val db = FirebaseDatabase.getInstance()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvJobListItem {
@@ -89,16 +89,16 @@ class RvJobConfigureAdapter(val context: Context, val jobIdList: List<String>, v
 
     override fun onBindViewHolder(holder: RvJobListItem, position: Int) {
         val currJobId = jobIdList[position]
+
         db.reference.child("Jobs").child(currJobId).get().addOnSuccessListener {
             if (it.exists()){
                 val jobItem = it.getValue(Job::class.java)
                 holder.frameLayout.visibility = View.GONE
                 holder.jobTitle.text = jobItem?.job_title
-                /*holder.mcJopOption.setOnClickListener {
+                holder.jobLogo.load(jobItem?.job_icon)
 
-                }*/
                 holder.iconDelete.setOnClickListener {
-                    onJobItemClicked(currJobId)
+                    onJobDeleteIconClicked(currJobId)
                 }
                 holder.iconEdit.setOnClickListener {
                     val intent = Intent(context,EditJobActivity::class.java)
@@ -120,6 +120,7 @@ class RvJobConfigureAdapter(val context: Context, val jobIdList: List<String>, v
         val mcJopOption: MaterialCardView = view.findViewById(R.id.mc_job_item_option)
         val iconDelete: ImageView = view.findViewById(R.id.icon_delete)
         val iconEdit: ImageView = view.findViewById(R.id.icon_edit)
+        val jobLogo: ImageView = view.findViewById(R.id.img_logo_job_option)
     }
 
 

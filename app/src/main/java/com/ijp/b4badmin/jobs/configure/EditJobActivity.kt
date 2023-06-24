@@ -17,6 +17,7 @@ import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
 import coil.load
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -90,8 +91,9 @@ class EditJobActivity : AppCompatActivity() {
                 val questionStatement = view.findViewById<EditText>(R.id.et__question)
                 val etTypeLayout = view.findViewById<TextInputLayout>(R.id.et_question_type)
                 val etType: EditText? = etTypeLayout.editText
-
-                val etOptionsLayout: TextInputLayout = view.findViewById(R.id.et_options_layout)
+                val btnDelete: FloatingActionButton = view.findViewById(R.id.btn_delete_question)
+                btnDelete.visibility = View.VISIBLE
+                val etOptionsLayout: TextInputLayout? = view.findViewById(R.id.et_options_layout)
                 (etTypeLayout?.editText as? AutoCompleteTextView)?.setText(q.question_type)
                 (etType as? AutoCompleteTextView)?.setAdapter(questionTypeAdapter)
 
@@ -99,23 +101,66 @@ class EditJobActivity : AppCompatActivity() {
 
                     if (inputText.toString() == "dropdown"){
                         Log.d("ValueChanged:","Drop $inputText")
-                        etOptionsLayout.visibility = View.VISIBLE
-                        etOptionsLayout.editText?.setText(q.options?.joinToString(","))
+                        etOptionsLayout?.visibility = View.VISIBLE
+                        etOptionsLayout?.editText?.setText(q.options?.joinToString(","))
                     }else{
                         Log.d("ValueChanged:","$inputText")
-                        etOptionsLayout.visibility = View.GONE
+                        etOptionsLayout?.visibility = View.GONE
                     }
                 }
                 questionStatement.setText(q.question_statement)
                 if (q.question_type == "dropdown"){
-                    etOptionsLayout.visibility = View.VISIBLE
-                    etOptionsLayout.editText?.setText(q.options?.joinToString(","))
+                    etOptionsLayout?.visibility = View.VISIBLE
+                    etOptionsLayout?.editText?.setText(q.options?.joinToString(","))
                 }else{
-                    etOptionsLayout.visibility = View.GONE
+                    etOptionsLayout?.visibility = View.GONE
+                }
+                btnDelete.setOnClickListener {
+                    binding?.llFormContainer?.removeView(view)
                 }
                 binding?.llFormContainer?.addView(view)
             }
+            binding?.btnAddQuestionsInForm?.setOnClickListener {
+                val no_of_questions =
+                    binding?.etAddQuestionInScreeningForm?.text.toString().toIntOrNull()
+                if (no_of_questions != null) {
+                    for (i in 1..no_of_questions) {
+                        val view = LayoutInflater.from(this)
+                            .inflate(
+                                R.layout.layout_question_item,
+                                binding?.llFormContainer,
+                                false
+                            )
+                        val questionStatement = view.findViewById<EditText>(R.id.et__question)
+                        val etTypeLayout = view.findViewById<TextInputLayout>(R.id.et_question_type)
+                        val etType: EditText? = etTypeLayout.editText
+                        val btnDelete: FloatingActionButton =
+                            view.findViewById(R.id.btn_delete_question)
+                        btnDelete.visibility = View.VISIBLE
+                        val etOptionsLayout: TextInputLayout? =
+                            view.findViewById(R.id.et_options_layout)
+                        (etTypeLayout?.editText as? AutoCompleteTextView)?.setText("text")
+                        (etType as? AutoCompleteTextView)?.setAdapter(questionTypeAdapter)
 
+                        etTypeLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
+
+                            if (inputText.toString() == "dropdown") {
+                                Log.d("ValueChanged:", "Drop $inputText")
+                                etOptionsLayout?.visibility = View.VISIBLE
+                            } else {
+                                Log.d("ValueChanged:", "$inputText")
+                                etOptionsLayout?.visibility = View.GONE
+                            }
+                        }
+                        btnDelete.setOnClickListener {
+                            binding?.llFormContainer?.removeView(view)
+                        }
+                        binding?.llFormContainer?.addView(view)
+                    }
+                    binding?.etAddQuestionInScreeningForm?.text?.clear()
+                    binding?.etAddQuestionInScreeningForm?.clearFocus()
+                }
+            }
             binding?.btnAddJob?.setOnClickListener {
                 val job_description: String = binding?.etJobDescription?.text.toString()
                 val job_title: String = binding?.etJobTitle?.text.toString()

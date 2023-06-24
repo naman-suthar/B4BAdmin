@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ijp.b4badmin.jobs.configure.ConfigureAppActivity
+import com.ijp.b4badmin.jobs.configure.task.SelectJobsFromAllAvailableActivity
 import com.ijp.b4badmin.jobs.job_application.AddNewJobActivity
 import com.vrcareer.b4badmin.databinding.ActivityJobHomeBinding
 
@@ -31,6 +32,10 @@ class JobHomeActivity : AppCompatActivity() {
         }
         binding?.mcJobConfigure?.setOnClickListener {
             val intent = Intent(this,ConfigureAppActivity::class.java)
+            startActivity(intent)
+        }
+        binding?.mcTaskConfigure?.setOnClickListener {
+            val intent = Intent(this@JobHomeActivity,SelectJobsFromAllAvailableActivity::class.java)
             startActivity(intent)
         }
     }

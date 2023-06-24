@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Job_Title"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
             android:textStyle="bold" />
 
         <com.google.android.material.card.MaterialCardView
