@@ -36,7 +36,7 @@
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No Pending Tasks Available"
+                android:text="No Pending Assessments Available"
                 android:gravity="center"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_submitted_assessment"

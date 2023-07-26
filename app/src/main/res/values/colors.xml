@@ -72,6 +72,8 @@
     <color name="loginBkColor">#f0f0f0</color>
     <color name="whiteCardColor">#fff</color>
 
-    <color name="green_approved">#00FF00</color>
+    <color name="green_approved">#95E46F</color>
     <color name="orange_pending">#EFFFAA00</color>
+
+    <color name="color_rejection">#D25A5A</color>
 </resources>

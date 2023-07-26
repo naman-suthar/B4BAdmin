@@ -22,6 +22,7 @@ import com.vrcareer.b4badmin.databinding.ActivityTrainingSubmittionListBinding
 import com.ijp.b4badmin.model.Assessment
 import com.ijp.b4badmin.model.User
 import com.ijp.b4badmin.tasks.ApproveTaskActivity
+import com.ijp.b4badmin.utils.ApplicationResponse
 
 /**
  * This Activity is used to show the list of submitted Assessment*/
@@ -56,7 +57,7 @@ class TrainingSubmissionListActivity : AppCompatActivity() {
                         if (snap.exists()){
                             for (task in snap.children){
                                 val assess = task.getValue(Assessment::class.java)
-                                if (assess != null && assess.status != "approved") {
+                                if (assess != null && assess.status == ApplicationResponse.Pending.name) {
                                     assessmentList.add(assess)
                                 }
                             }

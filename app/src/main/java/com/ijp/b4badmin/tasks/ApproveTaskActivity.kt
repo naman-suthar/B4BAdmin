@@ -19,6 +19,7 @@ import com.vrcareer.b4badmin.databinding.ActivityApproveTaskBinding
 import com.ijp.b4badmin.jobs.job_application.RvApplicationAnswersAdapter
 import com.ijp.b4badmin.model.EarningDTO
 import com.ijp.b4badmin.model.SubmittedTask
+import com.ijp.b4badmin.model.User
 
 /**
  * This activity is used to display details of pending task and approval/rejection */
@@ -33,6 +34,18 @@ class ApproveTaskActivity : AppCompatActivity() {
         Log.d("ReceivedTask ","${intent.getSerializableExtra("task")}")
         val task = intent.getSerializableExtra("task") as SubmittedTask?
 
+        task?.uid?.let {
+            db.reference.child("users").child(it).get().addOnSuccessListener { ds ->
+                if (ds.exists()) {
+                    val user = ds.getValue(User::class.java)
+                    binding?.applicationDetailsUserName?.text = user?.name
+                    binding?.applicationDetailsUserEmail?.text = user?.email
+                    binding?.applicationDetailsUserMobile?.text = user?.phoneNo
+                    binding?.applicationDetailsUserDob?.text = user?.dob
+                }
+            }
+        }
+        binding?.jobIdText?.text = "Task ID: ${task?.taskId}"
         for (i in 0 until (task?.imageList?.size ?: 0)) {
             val imageView = ImageView(this)
             imageView.load(task?.imageList?.get(i)?.toUri())
@@ -42,6 +55,12 @@ class ApproveTaskActivity : AppCompatActivity() {
             )
             layoutParams.setMargins(0,6,0,6)
             binding?.llImageHolder?.addView(imageView,layoutParams)
+        }
+
+        if (task?.imageList?.isEmpty() == true) {
+            binding?.txtImageProofHeading?.text = "No Image Proof"
+        }else{
+            binding?.txtImageProofHeading?.text = "Image Proofs"
         }
 
         val adapter = RvApplicationAnswersAdapter(this,task?.answerList!!)

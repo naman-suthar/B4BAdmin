@@ -6,6 +6,7 @@ data class JobApplication(
     var job_id:String? = null,
     var ansList: List<Answer>? = null,
     var status: String = "pending",
+    var rejection_message: String? = null,
     var time_of_request: Long? = null,
     var time_of_approval: Long? = null
 ):java.io.Serializable
@@ -22,6 +23,7 @@ data class Assessment(
     var task_id: String? = null,
     var ansList: List<Answer>? = null,
     var status: String = "pending",
+    var rejected_message: String? = null,
     var time_of_request: Long? = null,
     var time_of_approval: Long? = null
 ): java.io.Serializable
